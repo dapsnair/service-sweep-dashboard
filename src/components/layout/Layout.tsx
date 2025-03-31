@@ -1,6 +1,15 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { Sidebar } from "@/components/ui/sidebar";
+import { 
+  Sidebar, 
+  SidebarContent, 
+  SidebarFooter, 
+  SidebarHeader, 
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarProvider
+} from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Home, Users, Settings, Box, Bell, Search, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -118,53 +127,59 @@ export function Layout({ children }: LayoutProps) {
   }
 
   return (
-    <div className="min-h-screen flex">
-      <Sidebar className="hidden lg:block border-r" collapsible>
-        <Sidebar.Header>
-          <Link to="/" className="flex items-center space-x-2">
-            <span className="font-bold">Service Sweep</span>
-          </Link>
-        </Sidebar.Header>
-        <Sidebar.Content>
-          <Sidebar.Nav>
-            {routes.map((route) => (
-              <Sidebar.NavItem
-                key={route.href}
-                href={route.href}
-                active={isActive(route.href)}
-                Icon={route.icon}
-              >
-                {route.label}
-              </Sidebar.NavItem>
-            ))}
-          </Sidebar.Nav>
-        </Sidebar.Content>
-        <Sidebar.Footer className="text-xs text-muted-foreground">
-          <div className="hidden lg:flex lg:justify-end">
-            <Button variant="ghost" size="icon">
-              <Settings className="h-4 w-4" />
-              <span className="sr-only">Settings</span>
-            </Button>
-          </div>
-        </Sidebar.Footer>
-      </Sidebar>
-      <div className="flex-1 flex flex-col min-h-screen">
-        <header className="border-b bg-background sticky top-0 z-30 lg:hidden">
-          <div className="flex h-14 items-center px-4">
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <Sidebar className="hidden lg:block border-r" collapsible="icon">
+          <SidebarHeader className="flex items-center px-4 py-2">
             <Link to="/" className="flex items-center space-x-2">
               <span className="font-bold">Service Sweep</span>
             </Link>
-            <div className="flex-1" />
-            <Button variant="ghost" size="icon" className="mr-2">
-              <Search className="h-4 w-4" />
-              <span className="sr-only">Search</span>
-            </Button>
-          </div>
-        </header>
-        <main className="flex-1 bg-muted/40">
-          <div className="container py-6 max-w-6xl">{children}</div>
-        </main>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarMenu>
+              {routes.map((route) => (
+                <SidebarMenuItem key={route.href}>
+                  <SidebarMenuButton 
+                    asChild 
+                    isActive={isActive(route.href)}
+                    tooltip={route.label}
+                  >
+                    <Link to={route.href}>
+                      <route.icon className="mr-2 h-4 w-4" />
+                      <span>{route.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarContent>
+          <SidebarFooter className="text-xs text-muted-foreground">
+            <div className="hidden lg:flex lg:justify-end">
+              <Button variant="ghost" size="icon">
+                <Settings className="h-4 w-4" />
+                <span className="sr-only">Settings</span>
+              </Button>
+            </div>
+          </SidebarFooter>
+        </Sidebar>
+        <div className="flex-1 flex flex-col min-h-screen">
+          <header className="border-b bg-background sticky top-0 z-30 lg:hidden">
+            <div className="flex h-14 items-center px-4">
+              <Link to="/" className="flex items-center space-x-2">
+                <span className="font-bold">Service Sweep</span>
+              </Link>
+              <div className="flex-1" />
+              <Button variant="ghost" size="icon" className="mr-2">
+                <Search className="h-4 w-4" />
+                <span className="sr-only">Search</span>
+              </Button>
+            </div>
+          </header>
+          <main className="flex-1 bg-muted/40">
+            <div className="container py-6 max-w-6xl">{children}</div>
+          </main>
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 }
